@@ -1,33 +1,45 @@
-import { company, services } from "./company";
+import Image from "next/image";
+import { company, reviews, services } from "./company";
+import Brand from "./components/Brand";
 import MobileNav from "./components/MobileNav";
 import QuoteForm from "./components/QuoteForm";
+import VideoShowcase from "./components/VideoShowcase";
 
 function ArrowIcon() {
   return <span aria-hidden="true">↗</span>;
 }
 
-function LeafMark() {
-  return (
-    <svg viewBox="0 0 40 40" aria-hidden="true">
-      <path d="M33 6C18 7 8 15 8 27c0 4 3 7 7 7 12 0 19-13 18-28Z" />
-      <path d="M8 34c5-9 11-15 20-21" />
-    </svg>
-  );
-}
+const projects = [
+  { src: "/images/lakeside-patio.jpeg", alt: "Completed lakeside patio and restored lawn", label: "Lakeside patio" },
+  { src: "/images/finished-patio.jpeg", alt: "Finished paver patio beside a home", label: "Paver installation" },
+  { src: "/images/landscape-steps.jpeg", alt: "Landscaped hillside with stone steps and fresh mulch", label: "Landscape refresh" },
+  { src: "/images/property-clearing.jpeg", alt: "Envision operator clearing a tree with compact equipment", label: "Property clearing" },
+  { src: "/images/lakeside-lawn.jpeg", alt: "Maintained lawn overlooking a Wisconsin lake", label: "Lawn care" },
+  { src: "/images/mulch-bed.jpeg", alt: "Freshly mulched landscape bed with stone edging", label: "Mulch and bed care" },
+  { src: "/images/flower-bed.jpeg", alt: "Maintained flower bed along a front walkway", label: "Landscape maintenance" },
+  { src: "/images/cleared-walkway-night.jpeg", alt: "Walkway cleared after a heavy overnight snowfall", label: "Walkway clearing" },
+  { src: "/images/plowed-driveway.jpeg", alt: "Residential driveway cleared after snowfall", label: "Driveway plowing" },
+  { src: "/images/winter-driveway.jpeg", alt: "Long residential driveway cleared through deep snow", label: "Residential snow removal" },
+  { src: "/images/cleared-walkway.jpeg", alt: "Cleared walkway alongside a home in winter", label: "Sidewalk clearing" },
+  { src: "/images/snow-blower.jpeg", alt: "Envision team member clearing snow with a snow blower", label: "Detailed snow clearing" },
+  { src: "/images/truck-plowing.jpeg", alt: "Plow truck clearing a snow-covered property", label: "Snow plowing" },
+  { src: "/images/loader-snow-removal.jpeg", alt: "Loader moving deep snow from a large driveway", label: "Heavy snow removal" },
+  { src: "/images/ice-control.jpeg", alt: "Ice control treatment being applied to a driveway", label: "Ice control" },
+  { src: "/images/envision-truck-lawn.jpeg", alt: "Envision LawnCare truck and mowers beside a striped lawn", label: "Local and equipped" },
+];
 
 export default function Home() {
   return (
     <main>
       <header className="site-header">
         <a className="brand" href="#top" aria-label={`${company.name} home`}>
-          <LeafMark />
-          <span>{company.shortName}</span>
+          <Brand />
         </a>
         <nav className="desktop-nav" aria-label="Primary navigation">
           <a href="#services">Services</a>
           <a href="#about">Our approach</a>
           <a href="#work">Our work</a>
-          <a href="/reviews">Reviews</a>
+          <a href="#reviews">Reviews</a>
         </nav>
         <a className="header-cta" href="#contact">Request a quote <ArrowIcon /></a>
         <MobileNav />
@@ -46,7 +58,15 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-visual">
-          <div className="hero-image" role="img" aria-label="Beautifully maintained green lawn beside a modern home" />
+          <div className="hero-image">
+            <Image
+              src="/images/striped-lawn.jpeg"
+              alt="Freshly striped lawn maintained by Envision LawnCare"
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 55vw"
+            />
+          </div>
           <div className="availability-card">
             <span className="status-dot" />
             <p><strong>Now booking</strong><br />Weekly service in {company.city}</p>
@@ -66,10 +86,10 @@ export default function Home() {
       <section className="services section-pad" id="services">
         <div className="section-heading">
           <p className="eyebrow"><span /> What we do</p>
-          <h2>Keep it green.<br /><em>Lose the chores.</em></h2>
+          <h2>Every season.<br /><em>Handled.</em></h2>
         </div>
         <p className="section-lead">
-          We handle the mowing, trimming, and cleanup so your property stays sharp without taking time out of your week.
+          From summer mowing and landscape projects to winter snow removal, we keep your property ready without taking time out of your week.
         </p>
         <div className="service-list">
           {services.map((service) => (
@@ -84,7 +104,14 @@ export default function Home() {
       </section>
 
       <section className="approach" id="about">
-        <div className="approach-image" role="img" aria-label="Lawn care professional creating a precise edge" />
+        <div className="approach-image">
+          <Image
+            src="/images/patio-installation.jpeg"
+            alt="Envision LawnCare installing a custom stone patio"
+            fill
+            sizes="(max-width: 900px) 100vw, 50vw"
+          />
+        </div>
         <div className="approach-copy">
           <p className="eyebrow eyebrow-light"><span /> The Envision standard</p>
           <h2>Hard-working care.<br /><em>No fuss.</em></h2>
@@ -105,33 +132,64 @@ export default function Home() {
           <h2>Good work.<br /><em>Out in the open.</em></h2>
           <p>A look at the equipment, effort, and reliable work behind every visit.</p>
         </div>
-        <div className="video-placeholder">
-          <div className="video-shade" />
-          <div className="play-mark" aria-hidden="true"><span>▶</span></div>
-          <div className="video-label">
-            <span>Featured film</span>
-            <p>See Envision LawnCare in action</p>
-          </div>
-          <p className="coming-soon">Company film coming soon</p>
+        <VideoShowcase />
+      </section>
+
+      <section className="project-gallery" aria-labelledby="project-gallery-title">
+        <div className="gallery-heading">
+          <p className="eyebrow eyebrow-light"><span /> Recent projects</p>
+          <h2 id="project-gallery-title">Work that speaks<br /><em>for itself.</em></h2>
+          <p>Real properties. Real results. A look at some of the work completed by Envision LawnCare.</p>
+        </div>
+        <div className="gallery-grid">
+          {projects.map((project) => (
+            <figure className="gallery-item" key={project.src}>
+              <Image src={project.src} alt={project.alt} fill sizes="(max-width: 700px) 100vw, 50vw" />
+              <figcaption>{project.label}</figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 
-      <section className="testimonial section-pad" aria-labelledby="reviews-title">
-        <p className="eyebrow review-eyebrow"><span /> Trusted locally</p>
-        <div className="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
-        <h2 id="reviews-title">Five-star service,<br /><em>according to our customers.</em></h2>
-        <p className="review-summary">
-          <strong>{company.googleRating} rating</strong> from {company.googleReviewCount} Google reviews
-        </p>
-        <a
-          className="button button-dark review-link"
-          href={company.googleUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Read our Google reviews <ArrowIcon />
-        </a>
-        <p className="testimonial-count">Google reviews</p>
+      <section className="home-reviews section-pad" id="reviews" aria-labelledby="reviews-title">
+        <div className="home-reviews-heading">
+          <div>
+            <p className="eyebrow"><span /> Trusted locally</p>
+            <h2 id="reviews-title">Five-star service,<br /><em>in their own words.</em></h2>
+          </div>
+          <p>Real feedback from customers who trusted Envision LawnCare with their properties.</p>
+        </div>
+        <div className="rating-banner">
+          <div className="rating-score">
+            <strong>{company.googleRating}</strong>
+            <div>
+              <span className="rating-stars" aria-label="5 out of 5 stars">★★★★★</span>
+              <p>{company.googleReviewCount} reviews on <b>Google</b></p>
+            </div>
+          </div>
+          <a className="button button-dark" href={company.googleUrl} target="_blank" rel="noreferrer">
+            Review us on Google <ArrowIcon />
+          </a>
+        </div>
+        <div className="reviews-grid">
+          {reviews.map((review) => (
+            <article className="review-card" key={`${review.name}-${review.date}`}>
+              <header>
+                <span className="review-avatar" aria-hidden="true">{review.name.charAt(0)}</span>
+                <div><h3>{review.name}</h3><p>{review.date}</p></div>
+              </header>
+              <div className="card-stars" aria-label={`${review.rating} out of 5 stars`}>
+                {"★".repeat(review.rating)}
+              </div>
+              <blockquote>{review.text}</blockquote>
+              <div className="review-meta">
+                {review.priceAssessment && <p><span>Price assessment</span>{review.priceAssessment}</p>}
+                {review.services && <p><span>Services</span>{review.services}</p>}
+              </div>
+              <a href={company.googleUrl} target="_blank" rel="noreferrer">View on Google <ArrowIcon /></a>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="contact" id="contact">
@@ -150,13 +208,13 @@ export default function Home() {
 
       <footer>
         <div className="footer-main">
-          <a className="brand footer-brand" href="#top"><LeafMark /><span>{company.shortName}</span></a>
+          <a className="brand footer-brand" href="#top" aria-label={`${company.name} home`}><Brand footer /></a>
           <p>Reliable lawn care.<br />Done right, every visit.</p>
           <div className="footer-links">
             <a href="#services">Services</a>
             <a href="#about">Our approach</a>
             <a href="#work">Our work</a>
-            <a href="/reviews">Reviews</a>
+            <a href="#reviews">Reviews</a>
             <a href="#contact">Request a quote</a>
             <a href={company.facebookUrl} target="_blank" rel="noreferrer">Facebook</a>
             <a href={company.googleUrl} target="_blank" rel="noreferrer">Google reviews</a>

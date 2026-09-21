@@ -30,11 +30,11 @@ export default function MobileNav() {
       </button>
       <div className={`mobile-menu ${open ? "is-open" : ""}`} id="mobile-menu">
         <nav aria-label="Mobile navigation">
-          <Link href="/#services" onClick={close}>Services</Link>
-          <Link href="/#about" onClick={close}>Our approach</Link>
-          <Link href="/#work" onClick={close}>Our work</Link>
-          <Link href="/reviews" onClick={close}>Reviews</Link>
-          <Link href="/#contact" onClick={close}>Request a quote</Link>
+          <Link href="#services" onClick={close}>Services</Link>
+          <Link href="#about" onClick={close}>Our approach</Link>
+          <Link href="#work" onClick={close}>Our work</Link>
+          <Link href="#reviews" onClick={close}>Reviews</Link>
+          <Link href="#contact" onClick={close}>Request a quote</Link>
         </nav>
         <p>Reliable care. A better-looking lawn.</p>
       </div>

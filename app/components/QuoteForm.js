@@ -3,23 +3,49 @@
 import { useState } from "react";
 
 export default function QuoteForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    setSubmitted(true);
+    if (status === "submitting") return;
+
+    setStatus("submitting");
+    setError("");
+
+    const form = event.currentTarget;
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "We could not send your request.");
+      }
+
+      form.reset();
+      setStatus("success");
+    } catch (submissionError) {
+      setError(submissionError.message || "We could not send your request. Please try again.");
+      setStatus("error");
+    }
   }
 
-  if (submitted) {
+  if (status === "success") {
     return (
       <div className="form-success" role="status">
         <span>Request received</span>
         <h3>Thank you. We’ll be in touch shortly.</h3>
         <p>
-          This is currently a demonstration form. Connect it to your preferred
-          form provider before launch to receive submissions.
+          Your quote request has been sent to Envision LawnCare. We typically
+          reply within one business day.
         </p>
-        <button type="button" className="text-button" onClick={() => setSubmitted(false)}>
+        <button type="button" className="text-button" onClick={() => setStatus("idle")}>
           Send another request
         </button>
       </div>
@@ -27,7 +53,11 @@ export default function QuoteForm() {
   }
 
   return (
-    <form className="quote-form" onSubmit={handleSubmit}>
+    <form className="quote-form" onSubmit={handleSubmit} aria-busy={status === "submitting"}>
+      <label className="form-honeypot" aria-hidden="true">
+        Website
+        <input name="website" type="text" tabIndex="-1" autoComplete="off" />
+      </label>
       <div className="field-row">
         <label>
           <span>Your name</span>
@@ -47,8 +77,8 @@ export default function QuoteForm() {
         <select name="service" defaultValue="" required>
           <option value="" disabled>Select a service</option>
           <option>Recurring lawn care</option>
-          <option>Seasonal cleanup</option>
-          <option>Property upkeep</option>
+          <option>Landscaping</option>
+          <option>Snow removal</option>
           <option>Something else</option>
         </select>
       </label>
@@ -56,8 +86,9 @@ export default function QuoteForm() {
           <span>Tell us about your property <em>Optional</em></span>
         <textarea name="message" rows="3" placeholder="Property size, timing, access, or anything else we should know..." />
       </label>
-      <button className="button button-light form-submit" type="submit">
-        Request my quote <span aria-hidden="true">↗</span>
+      {error && <p className="form-error" role="alert">{error}</p>}
+      <button className="button button-light form-submit" type="submit" disabled={status === "submitting"}>
+        {status === "submitting" ? "Sending request..." : "Request my quote"} <span aria-hidden="true">↗</span>
       </button>
       <p className="form-note">No pressure, no obligation. We typically reply within one business day.</p>
     </form>

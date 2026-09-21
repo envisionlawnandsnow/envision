@@ -15,18 +15,18 @@ export const company = {
 export const services = [
   {
     number: "01",
-    title: "Weekly lawn care",
+    title: "Lawn care",
     text: "Reliable mowing, clean trimming, and a polished finish on a schedule that works for you.",
   },
   {
     number: "02",
-    title: "Seasonal cleanup",
-    text: "Spring clearing, fall leaves, and storm debris handled before they take over the property.",
+    title: "Landscaping",
+    text: "Mulch, bed care, patios, property cleanup, and practical improvements that bring the whole yard together.",
   },
   {
     number: "03",
-    title: "Property upkeep",
-    text: "Care around trees, fences, beds, and the finishing touches that make a property feel complete.",
+    title: "Snow removal",
+    text: "Dependable plowing, walkway clearing, and ice control that keep your property accessible through winter.",
   },
 ];
 
