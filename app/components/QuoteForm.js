@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ArrowIcon from "./ArrowIcon";
 
 export default function QuoteForm() {
   const [status, setStatus] = useState("idle");
@@ -88,7 +89,7 @@ export default function QuoteForm() {
       </label>
       {error && <p className="form-error" role="alert">{error}</p>}
       <button className="button button-light form-submit" type="submit" disabled={status === "submitting"}>
-        {status === "submitting" ? "Sending request..." : "Request my quote"} <span aria-hidden="true">↗</span>
+        {status === "submitting" ? "Sending request..." : "Request my quote"} <ArrowIcon />
       </button>
       <p className="form-note">No pressure, no obligation. We typically reply within one business day.</p>
     </form>

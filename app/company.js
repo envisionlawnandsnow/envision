@@ -16,17 +16,17 @@ export const services = [
   {
     number: "01",
     title: "Lawn care",
-    text: "Reliable mowing, clean trimming, and a polished finish on a schedule that works for you.",
+    text: "Professional weekly mowing, trimming, edging, and cleanup to keep your lawn looking clean and well-maintained all season long.",
   },
   {
     number: "02",
     title: "Landscaping",
-    text: "Mulch, bed care, patios, property cleanup, and practical improvements that bring the whole yard together.",
+    text: "From patios and retaining walls to mulch, rock, plantings, and property cleanups, we create and maintain outdoor spaces built to last.",
   },
   {
     number: "03",
     title: "Snow removal",
-    text: "Dependable plowing, walkway clearing, and ice control that keep your property accessible through winter.",
+    text: "Reliable residential and commercial snow plowing, sidewalk clearing, and ice control to keep your property safe and accessible all winter long.",
   },
 ];
 

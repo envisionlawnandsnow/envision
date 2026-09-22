@@ -1,4 +1,33 @@
+import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
+
+const RATE_LIMIT = 2;
+const RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
+
+const reserveSlotScript = `
+  local current = tonumber(redis.call("GET", KEYS[1]) or "0")
+  local limit = tonumber(ARGV[1])
+
+  if current >= limit then
+    return {0, current, redis.call("TTL", KEYS[1])}
+  end
+
+  current = redis.call("INCR", KEYS[1])
+  if current == 1 then
+    redis.call("EXPIRE", KEYS[1], ARGV[2])
+  end
+
+  return {1, current, redis.call("TTL", KEYS[1])}
+`;
+
+const releaseSlotScript = `
+  local current = tonumber(redis.call("GET", KEYS[1]) or "0")
+  if current <= 1 then
+    return redis.call("DEL", KEYS[1])
+  end
+  return redis.call("DECR", KEYS[1])
+`;
 
 const services = new Set([
   "Recurring lawn care",
@@ -15,6 +44,19 @@ function escapeHtml(value) {
     "'": "&#39;",
     '"': "&quot;",
   })[character]);
+}
+
+function getClientIp(request) {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return request.headers.get("x-real-ip") || forwarded?.split(",")[0]?.trim() || "unknown";
+}
+
+async function releaseRateLimitSlot(redis, key) {
+  try {
+    await redis.eval(releaseSlotScript, [key], []);
+  } catch {
+    console.error("Could not release a failed quote request rate-limit slot.");
+  }
 }
 
 export async function POST(request) {
@@ -57,12 +99,49 @@ export async function POST(request) {
   const apiKey = process.env.RESEND_API_KEY;
   const recipient = process.env.QUOTE_RECIPIENT_EMAIL;
   const sender = process.env.QUOTE_FROM_EMAIL;
+  const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-  if (!apiKey || !recipient || !sender) {
-    console.error("Quote email environment variables are not configured.");
+  if (!apiKey || !recipient || !sender || !redisUrl || !redisToken) {
+    console.error("Quote form environment variables are not configured.");
     return NextResponse.json(
       { error: "Quote requests are temporarily unavailable. Please call us instead." },
       { status: 503 },
+    );
+  }
+
+  const redis = new Redis({ url: redisUrl, token: redisToken });
+  const clientIp = getClientIp(request);
+  const ipHash = createHmac("sha256", apiKey).update(clientIp).digest("hex");
+  const rateLimitKey = `quote-rate:${ipHash}`;
+  let rateLimitResult;
+
+  try {
+    rateLimitResult = await redis.eval(
+      reserveSlotScript,
+      [rateLimitKey],
+      [RATE_LIMIT, RATE_LIMIT_WINDOW_SECONDS],
+    );
+  } catch {
+    console.error("Upstash could not be reached while checking the quote rate limit.");
+    return NextResponse.json(
+      { error: "Quote requests are temporarily unavailable. Please call us instead." },
+      { status: 503 },
+    );
+  }
+
+  const [allowed, , ttl] = rateLimitResult.map(Number);
+
+  if (!allowed) {
+    const retryAfter = Math.max(ttl, 1);
+    return NextResponse.json(
+      {
+        error: `You’ve reached today’s quote request limit. Please try again tomorrow or call us at (715) 419-9504.`,
+      },
+      {
+        status: 429,
+        headers: { "Retry-After": String(retryAfter) },
+      },
     );
   }
 
@@ -115,6 +194,7 @@ export async function POST(request) {
       }),
     });
   } catch {
+    await releaseRateLimitSlot(redis, rateLimitKey);
     console.error("Resend could not be reached while sending a quote email.");
     return NextResponse.json(
       { error: "We could not send your request. Please try again or call us directly." },
@@ -123,6 +203,7 @@ export async function POST(request) {
   }
 
   if (!response.ok) {
+    await releaseRateLimitSlot(redis, rateLimitKey);
     console.error(`Resend rejected quote email with status ${response.status}.`);
     return NextResponse.json(
       { error: "We could not send your request. Please try again or call us directly." },

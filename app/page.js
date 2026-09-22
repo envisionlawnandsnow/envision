@@ -1,18 +1,15 @@
 import Image from "next/image";
 import { company, reviews, services } from "./company";
+import ArrowIcon from "./components/ArrowIcon";
 import Brand from "./components/Brand";
 import MobileNav from "./components/MobileNav";
 import QuoteForm from "./components/QuoteForm";
 import VideoShowcase from "./components/VideoShowcase";
 
-function ArrowIcon() {
-  return <span aria-hidden="true">↗</span>;
-}
-
 const projects = [
   { src: "/images/lakeside-patio.jpeg", alt: "Completed lakeside patio and restored lawn", label: "Lakeside patio" },
-  { src: "/images/finished-patio.jpeg", alt: "Finished paver patio beside a home", label: "Paver installation" },
-  { src: "/images/landscape-steps.jpeg", alt: "Landscaped hillside with stone steps and fresh mulch", label: "Landscape refresh" },
+  { src: "/images/finished-patio-cropped.jpeg", alt: "Finished paver patio beside a home", label: "Paver installation" },
+  { src: "/images/landscape-steps-cropped.jpeg", alt: "Landscaped hillside with stone steps and fresh mulch", label: "Landscape refresh" },
   { src: "/images/property-clearing.jpeg", alt: "Envision operator clearing a tree with compact equipment", label: "Property clearing" },
   { src: "/images/lakeside-lawn.jpeg", alt: "Maintained lawn overlooking a Wisconsin lake", label: "Lawn care" },
   { src: "/images/mulch-bed.jpeg", alt: "Freshly mulched landscape bed with stone edging", label: "Mulch and bed care" },
@@ -47,31 +44,53 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <p className="eyebrow"><span /> Lawn & property care</p>
-          <h1>More time<br /><em>enjoying it.</em><br />Less time mowing.</h1>
+          <p className="eyebrow"><span /> Year-round grounds maintenance</p>
+          <h1>Property care.<br /><em>Every season.</em><br />One trusted team.</h1>
           <p className="hero-intro">
-            Straightforward, dependable lawn care that keeps your property ready to enjoy.
+            Professional lawn care, landscaping, and snow and ice management for homes and businesses across Polk County.
           </p>
           <div className="hero-actions">
             <a className="button button-dark" href="#contact">Get a free quote <ArrowIcon /></a>
-            <a className="text-link" href={`tel:${company.phoneHref}`}>or call {company.phone}</a>
+            <a className="text-link" href="#services">Explore our services</a>
           </div>
         </div>
         <div className="hero-visual">
           <div className="hero-image">
-            <Image
-              src="/images/striped-lawn.jpeg"
-              alt="Freshly striped lawn maintained by Envision LawnCare"
-              fill
-              priority
-              sizes="(max-width: 900px) 100vw, 55vw"
-            />
+            <div className="hero-image-panel hero-image-main">
+              <Image
+                src="/images/envision-truck-lawn.jpeg"
+                alt="Envision LawnCare truck beside a freshly striped lawn"
+                fill
+                priority
+                sizes="(max-width: 900px) 100vw, 38vw"
+              />
+              <span>Lawn care</span>
+            </div>
+            <div className="hero-image-panel">
+              <Image
+                src="/images/landscape-steps-cropped.jpeg"
+                alt="Completed landscape installation with stone steps"
+                fill
+                priority
+                sizes="(max-width: 900px) 50vw, 18vw"
+              />
+              <span>Landscaping</span>
+            </div>
+            <div className="hero-image-panel">
+              <Image
+                src="/images/truck-plowing.jpeg"
+                alt="Snow plow clearing a customer property"
+                fill
+                priority
+                sizes="(max-width: 900px) 50vw, 18vw"
+              />
+              <span>Snow removal</span>
+            </div>
           </div>
           <div className="availability-card">
             <span className="status-dot" />
-            <p><strong>Now booking</strong><br />Weekly service in {company.city}</p>
+            <p><strong>Now booking</strong><br />Lawn, landscape & snow services</p>
           </div>
-          <p className="image-caption">Dependable lawn care in Luck, Wisconsin</p>
         </div>
         <p className="hero-index">LUCK,<br />WI</p>
       </section>
@@ -223,7 +242,7 @@ export default function Home() {
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} {company.name} All rights reserved.</p>
           <p>Serving {company.serviceArea}</p>
-          <a href="#top">Back to top ↑</a>
+          <a className="back-to-top" href="#top">Back to top <ArrowIcon direction="up" /></a>
         </div>
       </footer>
     </main>
