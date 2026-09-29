@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
+import { serviceCategories } from "../../serviceData";
 
 const RATE_LIMIT = 2;
 const RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
@@ -30,9 +31,7 @@ const releaseSlotScript = `
 `;
 
 const services = new Set([
-  "Recurring lawn care",
-  "Landscaping",
-  "Snow removal",
+  ...serviceCategories.map((service) => service.title),
   "Something else",
 ]);
 
@@ -80,16 +79,20 @@ export async function POST(request) {
   const name = typeof body.name === "string" ? body.name.trim() : "";
   const phone = typeof body.phone === "string" ? body.phone.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
-  const service = typeof body.service === "string" ? body.service.trim() : "";
+  const selectedServices = Array.isArray(body.services)
+    ? [...new Set(body.services.filter((service) => typeof service === "string").map((service) => service.trim()))]
+    : [];
   const message = typeof body.message === "string" ? body.message.trim() : "";
 
   const validName = name.length >= 2 && name.length <= 100 && !/[\r\n]/.test(name);
   const validPhone = /^[0-9+().\-\s]{7,30}$/.test(phone);
   const validEmail = email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validService = services.has(service);
+  const validServices = selectedServices.length > 0
+    && selectedServices.length <= services.size
+    && selectedServices.every((service) => services.has(service));
   const validMessage = message.length <= 2000;
 
-  if (!validName || !validPhone || !validEmail || !validService || !validMessage) {
+  if (!validName || !validPhone || !validEmail || !validServices || !validMessage) {
     return NextResponse.json(
       { error: "Please check your information and try again." },
       { status: 400 },
@@ -149,7 +152,7 @@ export async function POST(request) {
     name: escapeHtml(name),
     phone: escapeHtml(phone),
     email: escapeHtml(email),
-    service: escapeHtml(service),
+    services: selectedServices.map(escapeHtml),
     message: escapeHtml(message).replace(/\n/g, "<br />"),
   };
 
@@ -166,14 +169,14 @@ export async function POST(request) {
         from: sender,
         to: recipient,
         reply_to: email,
-        subject: `New website quote request: ${service}`,
+        subject: `New website quote request: ${selectedServices.join(", ")}`,
         text: [
           "New quote request from the Envision LawnCare website",
           "",
           `Name: ${name}`,
           `Phone: ${phone}`,
           `Email: ${email}`,
-          `Service: ${service}`,
+          `Services: ${selectedServices.join(", ")}`,
           `Message: ${message || "No additional details provided."}`,
         ].join("\n"),
         html: `
@@ -186,7 +189,8 @@ export async function POST(request) {
               <p><strong>Name:</strong> ${safe.name}</p>
               <p><strong>Phone:</strong> <a href="tel:${safe.phone}">${safe.phone}</a></p>
               <p><strong>Email:</strong> <a href="mailto:${safe.email}">${safe.email}</a></p>
-              <p><strong>Service:</strong> ${safe.service}</p>
+              <p><strong>Services:</strong></p>
+              <ul>${safe.services.map((service) => `<li>${service}</li>`).join("")}</ul>
               <p><strong>Property details:</strong><br />${safe.message || "No additional details provided."}</p>
             </div>
           </div>

@@ -1,11 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { serviceCategories } from "../serviceData";
 import ArrowIcon from "./ArrowIcon";
 
 export default function QuoteForm() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
+  const [selectedServices, setSelectedServices] = useState([]);
+  const [servicesOpen, setServicesOpen] = useState(false);
+
+  function toggleService(title) {
+    setSelectedServices((current) => (
+      current.includes(title)
+        ? current.filter((service) => service !== title)
+        : [...current, title]
+    ));
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -14,8 +25,18 @@ export default function QuoteForm() {
     setStatus("submitting");
     setError("");
 
+    if (selectedServices.length === 0) {
+      setError("Please select at least one service.");
+      setStatus("error");
+      setServicesOpen(true);
+      return;
+    }
+
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form));
+    const data = {
+      ...Object.fromEntries(new FormData(form)),
+      services: selectedServices,
+    };
 
     try {
       const response = await fetch("/api/quote", {
@@ -30,6 +51,8 @@ export default function QuoteForm() {
       }
 
       form.reset();
+      setSelectedServices([]);
+      setServicesOpen(false);
       setStatus("success");
     } catch (submissionError) {
       setError(submissionError.message || "We could not send your request. Please try again.");
@@ -73,16 +96,43 @@ export default function QuoteForm() {
         <span>Email address</span>
         <input name="email" type="email" placeholder="jane@example.com" autoComplete="email" required />
       </label>
-      <label>
-        <span>How can we help?</span>
-        <select name="service" defaultValue="" required>
-          <option value="" disabled>Select a service</option>
-          <option>Recurring lawn care</option>
-          <option>Landscaping</option>
-          <option>Snow removal</option>
-          <option>Something else</option>
-        </select>
-      </label>
+      <div className="quote-service-field">
+        <span className="quote-field-label">How can we help?</span>
+        <button
+          className={`quote-service-trigger${servicesOpen ? " is-open" : ""}`}
+          type="button"
+          aria-expanded={servicesOpen}
+          aria-controls="quote-service-options"
+          onClick={() => setServicesOpen((open) => !open)}
+        >
+          <span>
+            {selectedServices.length === 0
+              ? "Select one or more services"
+              : selectedServices.length <= 2
+                ? selectedServices.join(", ")
+                : `${selectedServices.length} services selected`}
+          </span>
+          <span className="quote-service-chevron" aria-hidden="true" />
+        </button>
+        <div className="quote-service-options" id="quote-service-options" hidden={!servicesOpen}>
+          {[...serviceCategories, { number: "other", title: "Something else" }].map((service) => (
+            <label className="quote-service-option" key={service.number}>
+              <input
+                name="services"
+                type="checkbox"
+                value={service.title}
+                checked={selectedServices.includes(service.title)}
+                onChange={() => toggleService(service.title)}
+              />
+              <span className="quote-checkbox" aria-hidden="true" />
+              <span>{service.title}</span>
+            </label>
+          ))}
+          <button className="quote-service-done" type="button" onClick={() => setServicesOpen(false)}>
+            Done
+          </button>
+        </div>
+      </div>
       <label>
           <span>Tell us about your property <em>Optional</em></span>
         <textarea name="message" rows="3" placeholder="Property size, timing, access, or anything else we should know..." />

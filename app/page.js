@@ -1,9 +1,11 @@
 import Image from "next/image";
-import { company, reviews, services } from "./company";
+import { company, reviews } from "./company";
+import { serviceCategories } from "./serviceData";
 import ArrowIcon from "./components/ArrowIcon";
 import Brand from "./components/Brand";
 import MobileNav from "./components/MobileNav";
 import QuoteForm from "./components/QuoteForm";
+import ServicesAccordion from "./components/ServicesAccordion";
 import VideoShowcase from "./components/VideoShowcase";
 
 const projects = [
@@ -64,7 +66,7 @@ export default function Home() {
                 priority
                 sizes="(max-width: 900px) 100vw, 38vw"
               />
-              <span>Lawn care</span>
+              <span>Lawn maintenance</span>
             </div>
             <div className="hero-image-panel">
               <Image
@@ -84,7 +86,7 @@ export default function Home() {
                 priority
                 sizes="(max-width: 900px) 50vw, 18vw"
               />
-              <span>Snow removal</span>
+              <span>Snow & ice management</span>
             </div>
           </div>
           <div className="availability-card">
@@ -110,16 +112,7 @@ export default function Home() {
         <p className="section-lead">
           From summer mowing and landscape projects to winter snow removal, we keep your property ready without taking time out of your week.
         </p>
-        <div className="service-list">
-          {services.map((service) => (
-            <article className="service-item" key={service.number}>
-              <span className="service-number">{service.number}</span>
-              <h3>{service.title}</h3>
-              <p>{service.text}</p>
-              <a href="#contact" aria-label={`Ask about ${service.title}`}><ArrowIcon /></a>
-            </article>
-          ))}
-        </div>
+        <ServicesAccordion services={serviceCategories} />
       </section>
 
       <section className="approach" id="about">

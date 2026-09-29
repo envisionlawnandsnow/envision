@@ -12,24 +12,6 @@ export const company = {
   googleReviewCount: 16,
 };
 
-export const services = [
-  {
-    number: "01",
-    title: "Lawn care",
-    text: "Professional weekly mowing, trimming, edging, and cleanup to keep your lawn looking clean and well-maintained all season long.",
-  },
-  {
-    number: "02",
-    title: "Landscaping",
-    text: "From patios and retaining walls to mulch, rock, plantings, and property cleanups, we create and maintain outdoor spaces built to last.",
-  },
-  {
-    number: "03",
-    title: "Snow removal",
-    text: "Reliable residential and commercial snow plowing, sidewalk clearing, and ice control to keep your property safe and accessible all winter long.",
-  },
-];
-
 export const reviews = [
   {
     name: "Bella McKenzie",
