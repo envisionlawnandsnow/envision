@@ -128,12 +128,12 @@ export default function Home() {
           <p className="eyebrow eyebrow-light"><span /> The Envision standard</p>
           <h2>Hard-working care.<br /><em>No fuss.</em></h2>
           <p>
-            Good lawn care takes more than a quick pass with a mower. We pay attention to the edges, obstacles, cleanup, and details that finish the job.
+            Complete property care takes planning, reliable work, and attention to detail. From lawn maintenance and landscaping to hardscaping, cleanup, and winter service, we keep your property ready for every season.
           </p>
           <div className="principles">
-            <div><strong>01</strong><span><b>We show up</b>Clear schedules and a heads-up when weather gets in the way.</span></div>
-            <div><strong>02</strong><span><b>A complete finish</b>Trees, fences, beds, edges, and hard surfaces all get proper attention.</span></div>
-            <div><strong>03</strong><span><b>Local and straightforward</b>Honest work, clear pricing, and no complicated contracts.</span></div>
+            <div><strong>01</strong><span><b>Reliable in every season</b>Clear schedules, dependable service, and a heads-up when weather changes the plan.</span></div>
+            <div><strong>02</strong><span><b>Complete property care</b>Lawns, landscapes, hardscapes, trees, cleanup, snow, and ice all get proper attention.</span></div>
+            <div><strong>03</strong><span><b>Local and straightforward</b>Honest work, clear pricing, and practical solutions for your property.</span></div>
           </div>
         </div>
       </section>
