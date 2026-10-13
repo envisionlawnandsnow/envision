@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: {
-    default: "Envision LawnCare | Reliable Lawn Care in Luck, WI",
+    default: "Envision LawnCare | Property Care in St. Croix Falls, WI",
     template: "%s | Envision LawnCare",
   },
   description:

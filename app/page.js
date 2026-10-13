@@ -11,11 +11,18 @@ import VideoShowcase from "./components/VideoShowcase";
 const projects = [
   { src: "/images/lakeside-patio.jpeg", alt: "Completed lakeside patio and restored lawn", label: "Lakeside patio" },
   { src: "/images/finished-patio-cropped.jpeg", alt: "Finished paver patio beside a home", label: "Paver installation" },
+  { src: "/images/raised-patio-foundation.jpeg", alt: "Raised patio foundation framed by a retaining wall", label: "Raised patio foundation" },
+  { src: "/images/patio-compaction.jpeg", alt: "Envision team member compacting a newly installed paver patio", label: "Patio compaction" },
+  { src: "/images/paver-finishing.jpeg", alt: "Envision team member sweeping joint material across a paver patio", label: "Paver finishing" },
+  { src: "/images/paver-detail.jpeg", alt: "Close detail of precisely fitted concrete patio pavers", label: "Paver detail" },
   { src: "/images/landscape-steps-cropped.jpeg", alt: "Landscaped hillside with stone steps and fresh mulch", label: "Landscape refresh" },
   { src: "/images/property-clearing.jpeg", alt: "Envision operator clearing a tree with compact equipment", label: "Property clearing" },
   { src: "/images/lakeside-lawn.jpeg", alt: "Maintained lawn overlooking a Wisconsin lake", label: "Lawn care" },
   { src: "/images/mulch-bed.jpeg", alt: "Freshly mulched landscape bed with stone edging", label: "Mulch and bed care" },
   { src: "/images/flower-bed.jpeg", alt: "Maintained flower bed along a front walkway", label: "Landscape maintenance" },
+  { src: "/images/hydroseeding-application.jpeg", alt: "Envision team member applying hydroseed across a residential yard", label: "Hydroseeding application" },
+  { src: "/images/hydroseeded-yard.jpeg", alt: "Residential yard evenly covered after hydroseeding", label: "Complete seed coverage" },
+  { src: "/images/hydroseeded-property.jpeg", alt: "Wide view of a residential property after hydroseeding", label: "Hydroseeded property" },
   { src: "/images/cleared-walkway-night.jpeg", alt: "Walkway cleared after a heavy overnight snowfall", label: "Walkway clearing" },
   { src: "/images/plowed-driveway.jpeg", alt: "Residential driveway cleared after snowfall", label: "Driveway plowing" },
   { src: "/images/winter-driveway.jpeg", alt: "Long residential driveway cleared through deep snow", label: "Residential snow removal" },
@@ -94,7 +101,7 @@ export default function Home() {
             <p><strong>Now booking</strong><br />Lawn, landscape & snow services</p>
           </div>
         </div>
-        <p className="hero-index">LUCK,<br />WI</p>
+        <p className="hero-index">ST. CROIX FALLS,<br />WI</p>
       </section>
 
       <section className="trust-strip" aria-label="Company qualities">
